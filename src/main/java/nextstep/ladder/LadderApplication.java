@@ -1,26 +1,32 @@
 package nextstep.ladder;
 
-import java.util.*;
+import nextstep.ladder.view.ConsoleInputView;
+import nextstep.ladder.view.InputView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class LadderApplication {
+    private final InputView inputView;
+
+    public LadderApplication(InputView inputView) {
+        this.inputView = inputView;
+    }
 
     public static void main(String[] args) {
-        LadderApplication ladderApplication = new LadderApplication();
+        InputView inputView = new ConsoleInputView();
+
+        LadderApplication ladderApplication = new LadderApplication(inputView);
         ladderApplication.run();
     }
 
     public void run() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("참여할 사람 이름을 입력하세요. (이름은 쉼표(,)로 구분하세요)");
-//        List<String> names = Arrays.asList(scanner.nextLine().split(","));
-        List<String> names = Arrays.asList("pobi", "honux", "crong", "jk");
+        List<String> names = inputView.inputNames();
         System.out.println(String.join(",", names));
 
-        System.out.println("최대 사다리 높이는 몇 개인가요?");
-//        int height = Integer.parseInt(scanner.nextLine());
-        int height = 5;
+        int height = inputView.inputHeight();
         System.out.println(height);
 
         // init
