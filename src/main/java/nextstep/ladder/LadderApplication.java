@@ -1,5 +1,6 @@
 package nextstep.ladder;
 
+import nextstep.ladder.domain.Rung;
 import nextstep.ladder.view.ConsoleInputView;
 import nextstep.ladder.view.ConsoleResultView;
 import nextstep.ladder.view.InputView;
@@ -82,9 +83,4 @@ public class LadderApplication {
         resultView.print(names, formattedLadder);
     }
 
-    enum Rung {
-        LEFT,
-        RIGHT,
-        NONE
-    }
 }
