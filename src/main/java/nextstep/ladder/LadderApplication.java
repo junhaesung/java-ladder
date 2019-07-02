@@ -31,11 +31,9 @@ public class LadderApplication {
 
         int height = inputView.inputHeight();
 
-        Ladder ladder = new Ladder();
-        // init
-        ladder.initialize(names, height);
-        // draw line
-        ladder.drawLine();
+        int width = names.size();
+
+        Ladder ladder = Ladder.of(width, height);
 
         String formattedLadder = ladder.format(height);
 

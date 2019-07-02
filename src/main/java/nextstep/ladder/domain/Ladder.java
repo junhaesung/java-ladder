@@ -5,20 +5,27 @@ import java.util.List;
 import java.util.Random;
 
 public class Ladder {
-    private List<List<Rung>> ladder;
+    private final List<List<Rung>> ladder;
 
-    public void initialize(List<String> names, int height) {
-        ladder = new ArrayList<>();
-        for (int i = 0; i < names.size(); i++) {
+    private Ladder(List<List<Rung>> ladder) {
+        this.ladder = new ArrayList<>(ladder);
+    }
+
+    public static Ladder of(int width, int height) {
+        final List<List<Rung>> ladder = new ArrayList<>();
+        for (int i = 0; i < width; i++) {
             List<Rung> line = new ArrayList<>();
             for (int j = 0; j < height; j++) {
                 line.add(Rung.NONE);
             }
             ladder.add(line);
         }
+        final Ladder createdLadder = new Ladder(ladder);
+        createdLadder.drawLine();
+        return createdLadder;
     }
 
-    public void drawLine() {
+    private void drawLine() {
         for (int i = 0; i < ladder.size() - 1; i++) {
             for (int j = 0; j < ladder.get(i).size(); j++) {
                 Random random = new Random();
@@ -42,7 +49,7 @@ public class Ladder {
     }
 
     public String format(int height) {
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < height; i++) {
             stringBuilder.append("    ");
             for (int j = 0; j < ladder.size(); j++) {
