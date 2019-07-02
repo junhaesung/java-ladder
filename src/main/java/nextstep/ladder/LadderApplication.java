@@ -1,33 +1,36 @@
 package nextstep.ladder;
 
 import nextstep.ladder.view.ConsoleInputView;
+import nextstep.ladder.view.ConsoleResultView;
 import nextstep.ladder.view.InputView;
+import nextstep.ladder.view.ResultView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class LadderApplication {
     private final InputView inputView;
+    private final ResultView resultView;
 
-    public LadderApplication(InputView inputView) {
+    public LadderApplication(InputView inputView,
+                             ResultView resultView) {
         this.inputView = inputView;
+        this.resultView = resultView;
     }
 
     public static void main(String[] args) {
         InputView inputView = new ConsoleInputView();
+        ResultView resultView = new ConsoleResultView();
 
-        LadderApplication ladderApplication = new LadderApplication(inputView);
+        LadderApplication ladderApplication = new LadderApplication(inputView, resultView);
         ladderApplication.run();
     }
 
     public void run() {
         List<String> names = inputView.inputNames();
-        System.out.println(String.join(",", names));
 
         int height = inputView.inputHeight();
-        System.out.println(height);
 
         // init
         List<List<Rung>> ladder = new ArrayList<>();
@@ -61,20 +64,8 @@ public class LadderApplication {
             }
         }
 
-        System.out.println("실행결과");
-        String formattedNames = names.stream()
-                .map(name -> {
-                    StringBuilder stringBuilder = new StringBuilder(name);
-                    while (stringBuilder.length() < 5) {
-                        stringBuilder.insert(0, " ");
-                    }
-                    return stringBuilder.toString();
-                })
-                .collect(Collectors.joining(" "));
-        System.out.println(formattedNames);
-
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < height; i++) {
-            StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("    ");
             for (int j = 0; j < ladder.size(); j++) {
                 stringBuilder.append("|");
@@ -84,8 +75,11 @@ public class LadderApplication {
                     stringBuilder.append("     ");
                 }
             }
-            System.out.println(stringBuilder.toString());
+            stringBuilder.append("\n");
         }
+        String formattedLadder = stringBuilder.toString();
+
+        resultView.print(names, formattedLadder);
     }
 
     enum Rung {
