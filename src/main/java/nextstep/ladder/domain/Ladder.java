@@ -3,58 +3,43 @@ package nextstep.ladder.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Ladder {
-    private final List<List<Rung>> ladder;
+    private static final Random RANDOM = new Random();
+    private static final int ZERO = 0;
 
-    private Ladder(List<List<Rung>> ladder) {
-        this.ladder = new ArrayList<>(ladder);
+    private final List<Line> lines;
+
+    private Ladder(List<Line> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     public static Ladder of(int width, int height) {
-        final List<List<Rung>> ladder = new ArrayList<>();
-        for (int i = 0; i < width; i++) {
-            List<Rung> line = new ArrayList<>();
-            for (int j = 0; j < height; j++) {
-                line.add(Rung.NONE);
-            }
-            ladder.add(line);
-        }
-        final Ladder createdLadder = new Ladder(ladder);
+        final List<Line> lines = IntStream.range(0, width)
+                .mapToObj(number -> Line.from(height))
+                .collect(Collectors.toList());
+        final Ladder createdLadder = new Ladder(lines);
         createdLadder.drawLine();
         return createdLadder;
     }
 
     private void drawLine() {
-        for (int i = 0; i < ladder.size() - 1; i++) {
-            for (int j = 0; j < ladder.get(i).size(); j++) {
-                Random random = new Random();
-                if (random.nextInt(2) == 0) {
-                    continue;
-                }
-                List<Rung> line1 = ladder.get(i);
-                if (line1.get(j) != Rung.NONE) {
-                    continue;
-                }
-                List<Rung> line2 = ladder.get(i + 1);
-                if (line2.get(j) != Rung.NONE) {
-                    continue;
-                }
-                line1.remove(j);
-                line1.add(j, Rung.RIGHT);
-                line2.remove(j);
-                line2.add(j, Rung.LEFT);
-            }
+        for (int i = 0; i < lines.size() - 1; i++) {
+            Line line1 = lines.get(i);
+            Line line2 = lines.get(i + 1);
+            Line.drawLine(line1, line2, () -> RANDOM.nextInt(2) == ZERO);
         }
     }
 
     public String format(int height) {
         final StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < height; i++) {
+        for (int h = 0; h < height; h++) {
             stringBuilder.append("    ");
-            for (int j = 0; j < ladder.size(); j++) {
+            for (int j = 0; j < lines.size(); j++) {
                 stringBuilder.append("|");
-                if (ladder.get(j).get(i) == Rung.RIGHT) {
+                if (lines.get(j).hasRungOnRight(h)) {
                     stringBuilder.append("-----");
                 } else {
                     stringBuilder.append("     ");
