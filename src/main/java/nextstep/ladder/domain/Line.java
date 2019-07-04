@@ -4,25 +4,26 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Line {
     private final List<Rung> rungs;
 
-    private Line(List<Rung> rungs) {
+    private Line(final List<Rung> rungs) {
         if (rungs == null) {
             throw new IllegalArgumentException("'rungs' must not be null");
         }
         this.rungs = rungs;
     }
 
-    public static Line from(int height) {
+    public static Line from(final int height) {
         final List<Rung> rungs = IntStream.range(0, height)
                 .mapToObj(number -> Rung.NONE)
                 .collect(Collectors.toList());
         return new Line(rungs);
     }
 
-    private static boolean canDrawLine(Line one, Line theOther, int height) {
+    private static boolean canDrawLine(final Line one, final Line theOther, final int height) {
         if (one.rungs.size() < height) {
             return false;
         }
@@ -32,7 +33,7 @@ public class Line {
         return one.rungs.get(height) == Rung.NONE && theOther.rungs.get(height) == Rung.NONE;
     }
 
-    private static void drawLine(Line leftLine, Line rightLine, int height) {
+    private static void drawLine(final Line leftLine, final Line rightLine, final int height) {
         if (!canDrawLine(leftLine, rightLine, height)) {
             return;
         }
@@ -42,7 +43,7 @@ public class Line {
         rightLine.rungs.add(height, Rung.LEFT);
     }
 
-    public static void drawLine(Line leftLine, Line rightLine, Supplier<Boolean> strategy) {
+    public static void drawLine(final Line leftLine, final Line rightLine, final Supplier<Boolean> strategy) {
         final int minimumHeight = Integer.min(leftLine.height(), rightLine.height());
         IntStream.range(0, minimumHeight)
                 .forEach(height -> {
@@ -57,7 +58,11 @@ public class Line {
         return rungs.size();
     }
 
-    public boolean hasRungOnRight(int height) {
+    public Stream<Rung> stream() {
+        return rungs.stream();
+    }
+
+    public boolean hasRungOnRight(final int height) {
         return rungs.get(height) == Rung.RIGHT;
     }
 }

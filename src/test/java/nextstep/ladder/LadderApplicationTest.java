@@ -1,15 +1,24 @@
 package nextstep.ladder;
 
+import nextstep.ladder.domain.Ladder;
+import nextstep.ladder.domain.Line;
+import nextstep.ladder.domain.Rung;
 import nextstep.ladder.view.ConsoleResultView;
 import nextstep.ladder.view.InputView;
 import nextstep.ladder.view.ResultView;
+import nextstep.ladder.view.formatter.Formatter;
+import nextstep.ladder.view.formatter.LadderFormatter;
+import nextstep.ladder.view.formatter.LineFormatter;
+import nextstep.ladder.view.formatter.RungFormatter;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class LadderApplicationTest {
-
+    private Formatter<Rung> rungFormatter = new RungFormatter();
+    private Formatter<Line> lineFormatter = new LineFormatter(rungFormatter);
+    private Formatter<Ladder> ladderFormatter = new LadderFormatter(lineFormatter);
     private InputView inputView = new InputView() {
         @Override
         public List<String> inputNames() {
@@ -25,7 +34,7 @@ public class LadderApplicationTest {
             return 5;
         }
     };
-    private ResultView resultView = new ConsoleResultView();
+    private ResultView resultView = new ConsoleResultView(ladderFormatter);
 
     @Test
     void test() {
