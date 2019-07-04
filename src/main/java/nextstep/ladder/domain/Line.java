@@ -61,8 +61,4 @@ public class Line {
     public Stream<Rung> stream() {
         return rungs.stream();
     }
-
-    public boolean hasRungOnRight(final int height) {
-        return rungs.get(height) == Rung.RIGHT;
-    }
 }

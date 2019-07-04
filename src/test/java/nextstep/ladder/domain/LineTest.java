@@ -9,8 +9,8 @@ class LineTest {
     @Test
     @DisplayName("객체가 잘 생성되는지")
     void test() {
-        int height = 5;
-        Line actual = Line.from(5);
+        final int height = 5;
+        final Line actual = Line.from(5);
         assertThat(actual).isInstanceOf(Line.class);
     }
 
@@ -18,40 +18,48 @@ class LineTest {
     @DisplayName("둘 다 좌우에 선을 그리지 않은 상태이면, 선을 새로 그릴 수 있음")
     void from1() {
         // given
-        Line leftLine = Line.from(1);
-        Line rightLine = Line.from(1);
-        assertThat(leftLine.hasRungOnRight(0)).isFalse();
+        final Line leftLine = Line.from(1);
+        final Line rightLine = Line.from(1);
+        this.assertLineHas(leftLine, Rung.NONE);
+        this.assertLineHas(rightLine, Rung.NONE);
         // when
         Line.drawLine(leftLine, rightLine, () -> true);
         // then
-        assertThat(leftLine.hasRungOnRight(0)).isTrue();
+        this.assertLineHas(leftLine, Rung.RIGHT);
+        this.assertLineHas(rightLine, Rung.LEFT);
     }
 
     @Test
     @DisplayName("한쪽이라도 선이 있으면, 선을 새로 그릴 수 없음")
     void from2() {
         // given
-        Line leftLine = Line.from(1);
-        Line middleLine = Line.from(1);
-        Line rightLine = Line.from(1);
+        final Line leftLine = Line.from(1);
+        final Line middleLine = Line.from(1);
+        final Line rightLine = Line.from(1);
         Line.drawLine(leftLine, middleLine, () -> true);
-        assertThat(leftLine.hasRungOnRight(0)).isTrue();
-        assertThat(middleLine.hasRungOnRight(0)).isFalse();
+        this.assertLineHas(leftLine, Rung.RIGHT);
+        this.assertLineHas(middleLine, Rung.LEFT);
         // when
         Line.drawLine(middleLine, rightLine, () -> true);
         // then
-        assertThat(middleLine.hasRungOnRight(0)).isFalse();
+        this.assertLineHas(middleLine, Rung.LEFT);
+        this.assertLineHas(rightLine, Rung.NONE);
     }
 
     @Test
     @DisplayName("높이를 잘 반환하는지")
     void height() {
         // given
-        Line line = Line.from(5);
+        final Line line = Line.from(5);
         // when
-        int actual = line.height();
+        final int actual = line.height();
         // then
         assertThat(actual).isEqualTo(5);
+    }
+
+    private void assertLineHas(final Line line, final Rung rung) {
+        final boolean actual = line.stream().allMatch(r -> r == rung);
+        assertThat(actual).isTrue();
     }
 
 }
